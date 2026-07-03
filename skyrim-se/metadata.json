@@ -1,0 +1,5 @@
+{
+  "name": "Skyrim Special Edition",
+  "wasm_path": "plugin.wasm",
+  "icon_path": "icon.png"
+}

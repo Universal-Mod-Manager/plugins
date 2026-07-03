@@ -1,0 +1,5 @@
+{
+  "name": "The Witcher 3: Wild Hunt",
+  "wasm_path": "plugin.wasm",
+  "icon_path": "icon.png"
+}

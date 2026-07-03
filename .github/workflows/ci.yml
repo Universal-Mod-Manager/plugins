@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  RUST_VERSION: stable
+
+jobs:
+  plugins:
+    name: Plugins (Lint/Build/Test)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          components: rustfmt, clippy
+          targets: wasm32-unknown-unknown
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+
+      - name: Format Check
+        run: cargo fmt --all -- --check
+
+      - name: Clippy (Linter)
+        run: cargo clippy --target wasm32-unknown-unknown -p skyrim-se-plugin -p witcher3-plugin -- -D warnings
+
+      - name: Build plugins
+        run: cargo build --release --target wasm32-unknown-unknown -p skyrim-se-plugin -p witcher3-plugin
+
+      - name: Tests
+        run: cargo test --workspace

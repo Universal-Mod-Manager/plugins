@@ -1,0 +1,11 @@
+[package]
+name = "conformance"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+
+[dev-dependencies]
+extism = "1"
+serde_json = "1"

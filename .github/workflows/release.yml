@@ -1,0 +1,44 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+env:
+  RUST_VERSION: stable
+
+jobs:
+  release:
+    name: Build and publish plugin assets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          targets: wasm32-unknown-unknown
+
+      - name: Build plugins
+        run: cargo build --release --target wasm32-unknown-unknown -p skyrim-se-plugin -p witcher3-plugin
+
+      - name: Stage release assets
+        run: |
+          mkdir -p dist
+          cp target/wasm32-unknown-unknown/release/skyrim_se_plugin.wasm dist/skyrim-se.wasm
+          cp skyrim-se/metadata.json dist/skyrim-se.metadata.json
+          cp target/wasm32-unknown-unknown/release/witcher3_plugin.wasm dist/witcher3.wasm
+          cp witcher3/metadata.json dist/witcher3.metadata.json
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/skyrim-se.wasm
+            dist/skyrim-se.metadata.json
+            dist/witcher3.wasm
+            dist/witcher3.metadata.json
