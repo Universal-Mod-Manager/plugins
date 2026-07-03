@@ -1,0 +1,5 @@
+{
+  "name": "Crusader Kings III",
+  "wasm_path": "plugin.wasm",
+  "icon_path": "icon.png"
+}
